@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Bewegungs-Logik</title>
+    <!-- Polyfill für Drag & Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-style: normal !important; /* Keine Kursivschrift */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .intro-box {
+            background-color: #e8f4fd;
+            padding: 20px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .task-card {
+            background: #fff;
+            border: 1px solid #dcdde1;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .situation {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Interaktive Elemente */
+        select {
+            padding: 8px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 5px;
+        }
+
+        .correct { border-color: var(--success-color) !important; background-color: #eafaf1; }
+        .incorrect { border-color: var(--error-color) !important; background-color: #fdedec; }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-solution { background-color: #7f8c8d; }
+
+        /* Drag and Drop */
+        .drag-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background: #eee;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .drag-item {
+            background: var(--secondary-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: grab;
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 120px;
+            height: 35px;
+            border-bottom: 2px dashed var(--secondary-color);
+            vertical-align: middle;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .radio-label {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .radio-label.correct-radio { background-color: #eafaf1; border-color: var(--success-color); }
+        .radio-label.incorrect-radio { background-color: #fdedec; border-color: var(--error-color); }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik</h1>
+    <h2>Bewegungs-Logik: пошли, поехали, полетели, побежали</h2>
+
+    <div class="intro-box">
+        <p>Im Russischen wählen wir das Verb für eine Aufforderung („Lass uns...“ / „Gehen wir...“) danach aus, wie wir uns bewegen:</p>
+        <ul>
+            <li><strong>пошли:</strong> zu Fuß (Restaurant nebenan, Park, Zimmer).</li>
+            <li><strong>поехали:</strong> mit einem Fahrzeug (Auto, Bus, Zug, Schiff).</li>
+            <li><strong>полетели:</strong> mit dem Flugzeug (Urlaub im Ausland, weite Geschäftsreise).</li>
+            <li><strong>pобежали:</strong> rennen oder eilen (wenn man spät dran ist oder es regnet).</li>
+        </ul>
+    </div>
+
+    <!-- Teil 1: Dropdown-Entscheidung (Aufgaben 1-10) -->
+    <h3>Teil 1: Wähle das logische Verb</h3>
+
+    <div class="task-card" id="task1">
+        <span class="situation">1. Du stehst mit deinem Freund vor einem Café und willst hineingehen:</span>
+        „<select onchange="checkSelect(this, 'пошли')" data-ans="пошли">
+            <option value="">--Wähle--</option>
+            <option value="пошли">пошли</option>
+            <option value="поехали">поехали</option>
+            <option value="полетели">полетели</option>
+        </select> пить кофе!“
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetTask(1)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(1)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task2">
+        <span class="situation">2. Ihr wollt am Wochenende mit dem Auto zum Landhaus (Datscha) fahren:</span>
+        „<select onchange="checkSelect(this, 'поехали')" data-ans="поехали">
+            <option value="">--Wähle--</option>
+            <option value="пошли">пошли</option>
+            <option value="поехали">поехали</option>
+            <option value="побежали">побежали</option>
+        </select> на дачу!“
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetTask(2)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(2)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task3">
+        <span class="situation">3. Ihr habt Tickets nach Thailand gebucht und freut euch auf den Flug:</span>
+        „<select onchange="checkSelect(this, 'полетели')" data-ans="полетели">
+            <option value="">--Wähle--</option>
+            <option value="поехали">поехали</option>
+            <option value="полетели">полетели</option>
+            <option value="пошли">пошли</option>
+        </select> в отпуск!“
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetTask(3)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(3)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task4">
+        <span class="situation">4. Es fängt plötzlich an stark zu regnen und ihr wollt schnell zum Haus eilen:</span>
+        „Ой, дождь! <select onchange="checkSelect(this, 'побежали')" data-ans="побежали">
+            <option value="">--Wähle--</option>
+            <option value="пошли">пошли</option>
+            <option value="поехали">поехали</option>
+            <option value="побежали">побежали</option>
+        </select> домой!“
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetTask(4)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(4)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task5">
+        <span class="situation">5. Ihr wollt mit dem Schiff über die Wolga setzen:</span>
+        „<select onchange="checkSelect(this, 'поехали')" data-ans="поехали">
+            <option value="">--Wähle--</option>
+            <option value="поехали">поехали</option>
+            <option value="полетели">полетели</option>
+            <option value="побежали">побежали</option>
+        </select> на тот берег!“
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetTask(5)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(5)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task6">
+        <span class="situation">6. Du schlägst vor, zu Fuß in den Park nebenan zu gehen:</span>
+        „<select onchange="checkSelect(this, 'пошли')" data-ans="пошли">
+            <option value="">--Wähle--</option>
+            <option value="пошли">пошли</option>
+            <option value="поехали">поехали</option>
+            <option value="полетели">полетели</option>
+        </select> гулять!“
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetTask(6)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(6)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task7">
+        <span class="situation">7. Der Bus kommt in einer Minute und ihr seid noch weit weg:</span>
+        „Скорее! <select onchange="checkSelect(this, 'побежали')" data-ans="побежали">
+            <option value="">--Wähle--</option>
+            <option value="пошли">пошли</option>
+            <option value="побежали">побежали</option>
+            <option value="поехали">поехали</option>
+        </select> на остановку!“
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetTask(7)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(7)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task8">
+        <span class="situation">8. Ihr plant eine Reise von Moskau nach Berlin mit dem Zug:</span>
+        „<select onchange="checkSelect(this, 'поехали')" data-ans="поехали">
+            <option value="">--Wähle--</option>
+            <option value="пошли">пошли</option>
+            <option value="поехали">поехали</option>
+            <option value="полетели">полетели</option>
+        </select> в Берлин!“
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetTask(8)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(8)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task9">
+        <span class="situation">9. Ihr wollt in das Zimmer nebenan gehen, um dort zu arbeiten:</span>
+        „<select onchange="checkSelect(this, 'пошли')" data-ans="пошли">
+            <option value="">--Wähle--</option>
+            <option value="пошли">пошли</option>
+            <option value="полетели">полетели</option>
+            <option value="поехали">поехали</option>
+        </select> в кабинет!“
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetTask(9)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(9)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task10">
+        <span class="situation">10. Ihr wollt gemeinsam mit dem Fahrrad zum See fahren:</span>
+        „<select onchange="checkSelect(this, 'поехали')" data-ans="поехали">
+            <option value="">--Wähle--</option>
+            <option value="пошли">пошли</option>
+            <option value="поехали">поехали</option>
+            <option value="побежали">побежали</option>
+        </select> на озеро!“
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetTask(10)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(10)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Teil 2: Drag and Drop (Aufgaben 11-15) -->
+    <h3>Teil 2: Ordne die Situationen zu</h3>
+    <div class="task-card" id="task-drag">
+        <div class="drag-pool">
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="item1">пошли</div>
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="item2">поехали</div>
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="item3">полетели</div>
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="item4">pобежали</div>
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="item5">поехали</div>
+        </div>
+
+        <p>11. In die Küche (zu Fuß): <span class="drop-zone" ondrop="drop(event, 'пошли')" ondragover="allowDrop(event)"></span></p>
+        <p>12. Nach New York (Flugzeug): <span class="drop-zone" ondrop="drop(event, 'полетели')" ondragover="allowDrop(event)"></span></p>
+        <p>13. Mit dem Taxi zum Theater: <span class="drop-zone" ondrop="drop(event, 'поехали')" ondragover="allowDrop(event)"></span></p>
+        <p>14. Schnell zum Unterricht (Eile): <span class="drop-zone" ondrop="drop(event, 'pобежали')" ondragover="allowDrop(event)"></span></p>
+        <p>15. Mit dem Bus in die Stadt: <span class="drop-zone" ondrop="drop(event, 'поехали')" ondragover="allowDrop(event)"></span></p>
+
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetDrag()">Zurücksetzen</button>
+            <button class="btn-solution" onclick="solveDrag()">Lösungen anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Teil 3: Multiple Choice Dialoge (Aufgaben 16-20) -->
+    <h3>Teil 3: Was passt in den Dialog?</h3>
+
+    <div class="task-card" id="task16">
+        <span class="situation">16. A: „Es ist spät.“ B: „Ja, lass uns schnell zum Bahnhof eilen!“</span>
+        <div class="radio-group">
+            <label class="radio-label" onclick="checkRadio(16, 'b', this)"><input type="radio" name="r16"> пошли</label>
+            <label class="radio-label" onclick="checkRadio(16, 'b', this)"><input type="radio" name="r16"> побежали</label>
+            <label class="radio-label" onclick="checkRadio(16, 'b', this)"><input type="radio" name="r16"> полетели</label>
+        </div>
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetRadio(16)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="solveRadio(16, 1)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task17">
+        <span class="situation">17. A: „Ich habe ein Auto.“ B: „Super, dann lass uns zum Strand fahren!“</span>
+        <div class="radio-group">
+            <label class="radio-label" onclick="checkRadio(17, 'a', this)"><input type="radio" name="r17"> поехали</label>
+            <label class="radio-label" onclick="checkRadio(17, 'a', this)"><input type="radio" name="r17"> пошли</label>
+            <label class="radio-label" onclick="checkRadio(17, 'a', this)"><input type="radio" name="r17"> побежали</label>
+        </div>
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetRadio(17)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="solveRadio(17, 0)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task18">
+        <span class="situation">18. A: „Wollen wir in den Supermarkt gegenüber?“ B: „Ja, gehen wir.“</span>
+        <div class="radio-group">
+            <label class="radio-label" onclick="checkRadio(18, 'c', this)"><input type="radio" name="r18"> поехали</label>
+            <label class="radio-label" onclick="checkRadio(18, 'c', this)"><input type="radio" name="r18"> полетели</label>
+            <label class="radio-label" onclick="checkRadio(18, 'c', this)"><input type="radio" name="r18"> пошли</label>
+        </div>
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetRadio(18)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="solveRadio(18, 2)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task19">
+        <span class="situation">19. A: „Lass uns nach Amerika reisen!“ B: „Klar, fliegen wir!“</span>
+        <div class="radio-group">
+            <label class="radio-label" onclick="checkRadio(19, 'a', this)"><input type="radio" name="r19"> полетели</label>
+            <label class="radio-label" onclick="checkRadio(19, 'a', this)"><input type="radio" name="r19"> побежали</label>
+            <label class="radio-label" onclick="checkRadio(19, 'a', this)"><input type="radio" name="r19"> поехали</label>
+        </div>
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetRadio(19)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="solveRadio(19, 0)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task20">
+        <span class="situation">20. A: „Lass uns mit dem Bus zur Schule fahren.“ B: „Gute Idee.“</span>
+        <div class="radio-group">
+            <label class="radio-label" onclick="checkRadio(20, 'b', this)"><input type="radio" name="r20"> пошли</label>
+            <label class="radio-label" onclick="checkRadio(20, 'b', this)"><input type="radio" name="r20"> поехали</label>
+            <label class="radio-label" onclick="checkRadio(20, 'b', this)"><input type="radio" name="r20"> полетели</label>
+        </div>
+        <div class="btn-group">
+            <button class="btn-reset" onclick="resetRadio(20)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="solveRadio(20, 1)">Lösung anzeigen</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- Dropdown Logik ---
+    function checkSelect(el, correctAns) {
+        if (el.value === correctAns) {
+            el.className = "correct";
+        } else if (el.value === "") {
+            el.className = "";
+        } else {
+            el.className = "incorrect";
+        }
+    }
+
+    function resetTask(id) {
+        const select = document.getElementById('task' + id).querySelector('select');
+        select.value = "";
+        select.className = "";
+    }
+
+    function showSolution(id) {
+        const select = document.getElementById('task' + id).querySelector('select');
+        select.value = select.getAttribute('data-ans');
+        select.className = "correct";
+    }
+
+    // --- Drag and Drop Logik ---
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.innerText);
+    }
+
+    function drop(ev, correctVal) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        ev.target.innerText = data;
+        if (data === correctVal) {
+            ev.target.style.color = "var(--success-color)";
+            ev.target.style.borderColor = "var(--success-color)";
+        } else {
+            ev.target.style.color = "var(--error-color)";
+            ev.target.style.borderColor = "var(--error-color)";
+        }
+    }
+
+    function resetDrag() {
+        const zones = document.querySelectorAll('.drop-zone');
+        zones.forEach(z => {
+            z.innerText = "";
+            z.style.color = "black";
+            z.style.borderColor = "var(--secondary-color)";
+        });
+    }
+
+    function solveDrag() {
+        const solutions = ["пошли", "полетели", "поехали", "pобежали", "поехали"];
+        const zones = document.querySelectorAll('.drop-zone');
+        zones.forEach((z, i) => {
+            z.innerText = solutions[i];
+            z.style.color = "var(--success-color)";
+            z.style.borderColor = "var(--success-color)";
+        });
+    }
+
+    // --- Radio Logik ---
+    function checkRadio(taskId, correctLetter, element) {
+        const group = document.getElementById('task' + taskId).querySelectorAll('.radio-label');
+        group.forEach(label => label.className = "radio-label");
+        
+        const isCorrect = (correctLetter === 'a' && element.innerText.includes('полетели') && taskId === 19) ||
+                          (correctLetter === 'a' && element.innerText.includes('поехали') && taskId === 17) ||
+                          (correctLetter === 'b' && element.innerText.includes('побежали') && taskId === 16) ||
+                          (correctLetter === 'b' && element.innerText.includes('поехали') && taskId === 20) ||
+                          (correctLetter === 'c' && element.innerText.includes('пошли') && taskId === 18);
+
+        if (isCorrect) {
+            element.classList.add('correct-radio');
+        } else {
+            element.classList.add('incorrect-radio');
+        }
+    }
+
+    function resetRadio(taskId) {
+        const container = document.getElementById('task' + taskId);
+        container.querySelectorAll('input').forEach(r => r.checked = false);
+        container.querySelectorAll('.radio-label').forEach(l => l.className = "radio-label");
+    }
+
+    function solveRadio(taskId, index) {
+        const labels = document.getElementById('task' + taskId).querySelectorAll('.radio-label');
+        labels.forEach(l => l.className = "radio-label");
+        labels[index].classList.add('correct-radio');
+        labels[index].querySelector('input').checked = true;
+    }
+</script>
+
+</body>
+</html>
