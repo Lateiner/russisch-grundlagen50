@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Transformations-Übungen</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-color: #dcdde1;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-style: normal !important; /* Deaktiviert Kursivschrift global */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .intro-box {
+            background-color: #e8f4fd;
+            padding: 20px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .task-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+
+        .task-card:hover {
+            border-color: var(--secondary-color);
+        }
+
+        .original-sentence {
+            display: block;
+            font-weight: bold;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .transformation-area {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+
+        select {
+            padding: 8px;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        select.correct {
+            border-color: var(--success-color);
+            background-color: #eafaf1;
+        }
+
+        select.incorrect {
+            border-color: var(--error-color);
+            background-color: #fdedec;
+        }
+
+        .btn-container {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #fff;
+            transition: opacity 0.3s;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-solution { background-color: #7f8c8d; }
+        button:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .transformation-area {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik</h1>
+    <p style="text-align: center;">Grundlagen: Alternativen zum Imperativ</p>
+
+    <div class="intro-box">
+        <h3>Anleitung: Transformations-Aufgaben</h3>
+        Wandle den Wunsch-Satz (я хочу, чтобы...) in eine alternative Aufforderung um. Wähle die richtigen Wörter aus den Dropdown-Menüs aus. Achte auf den Aspekt (НСВ/СВ) und die Person!
+    </div>
+
+    <div id="exercise-list">
+        <!-- Aufgaben 1 bis 20 -->
+        
+        <!-- Sektion: Wünsche an Dritte -->
+        <h3>Wünsche an dritte Personen (пусть / пускай)</h3>
+        
+        <div class="task-card" id="task1">
+            <span class="original-sentence">„я хочу, чтобы он читал.“</span>
+            <div class="transformation-area">
+                <select onchange="check(this)" data-answer="пусть">
+                    <option value="">--Wähle--</option>
+                    <option value="пусть">пусть</option>
+                    <option value="давай">давай</option>
+                </select>
+                он 
+                <select onchange="check(this)" data-answer="читает">
+                    <option value="">--Wähle--</option>
+                    <option value="читай">читай</option>
+                    <option value="читает">читает</option>
+                </select>.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task1')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task1')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task2">
+            <span class="original-sentence">„я хочу, чтобы она купила хлеб.“ (Einmaliges Resultat)</span>
+            <div class="transformation-area">
+                пусть она 
+                <select onchange="check(this)" data-answer="купит">
+                    <option value="">--Wähle--</option>
+                    <option value="купит">купит</option>
+                    <option value="покупает">покупает</option>
+                </select>
+                хлеб.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task2')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task2')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task3">
+            <span class="original-sentence">„я хочу, чтобы они не кричали.“ (Verbot = НСВ)</span>
+            <div class="transformation-area">
+                пускай они 
+                <select onchange="check(this)" data-answer="не кричат">
+                    <option value="">--Wähle--</option>
+                    <option value="не крикнут">не крикнут</option>
+                    <option value="не кричат">не кричат</option>
+                </select>.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task3')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task3')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task4">
+            <span class="original-sentence">„я хочу, чтобы Иван позвонил мне.“</span>
+            <div class="transformation-area">
+                пусть Иван мне 
+                <select onchange="check(this)" data-answer="позвонит">
+                    <option value="">--Wähle--</option>
+                    <option value="звонит">звонит</option>
+                    <option value="позвонит">позвонит</option>
+                </select>.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task4')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task4')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task5">
+            <span class="original-sentence">„я хочу, чтобы дети не опаздывали.“ (Verbot)</span>
+            <div class="transformation-area">
+                пусть дети 
+                <select onchange="check(this)" data-answer="не опаздывают">
+                    <option value="">--Wähle--</option>
+                    <option value="не опаздывают">не опаздывают</option>
+                    <option value="не опоздают">не опоздает</option>
+                </select>.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task5')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task5')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Sektion: давай / давайте -->
+        <h3>Gemeinsame Handlungen (давай / давайте)</h3>
+
+        <div class="task-card" id="task6">
+            <span class="original-sentence">„я предлагаю тебе, чтобы мы завтракали.“ (Prozess)</span>
+            <div class="transformation-area">
+                давай 
+                <select onchange="check(this)" data-answer="завтракать">
+                    <option value="">--Wähle--</option>
+                    <option value="завтракаем">завтракаем</option>
+                    <option value="завтракать">завтракать</option>
+                </select>.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task6')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task6')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task7">
+            <span class="original-sentence">„я предлагаю вам, чтобы мы пообедали.“ (Resultat)</span>
+            <div class="transformation-area">
+                давайте 
+                <select onchange="check(this)" data-answer="пообедаем">
+                    <option value="">--Wähle--</option>
+                    <option value="пообедать">пообедать</option>
+                    <option value="пообедаем">пообедаем</option>
+                </select>.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task7')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task7')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task8">
+            <span class="original-sentence">„я предлагаю тебе, чтобы мы выпили чаю.“ (Resultat)</span>
+            <div class="transformation-area">
+                давай 
+                <select onchange="check(this)" data-answer="выпьем">
+                    <option value="">--Wähle--</option>
+                    <option value="пьём">пьём</option>
+                    <option value="выпьем">выпьем</option>
+                </select> чаю.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task8')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task8')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task9">
+            <span class="original-sentence">„я предлагаю вам, чтобы wir den Film ansehen.“ (Resultat)</span>
+            <div class="transformation-area">
+                давайте 
+                <select onchange="check(this)" data-answer="посмотрим">
+                    <option value="">--Wähle--</option>
+                    <option value="смотреть">смотреть</option>
+                    <option value="посмотрим">посмотрим</option>
+                </select> фильм.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task9')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task9')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task10">
+            <span class="original-sentence">„я предлагаю тебе, dass wir tanzen.“ (Vorgang)</span>
+            <div class="transformation-area">
+                давай 
+                <select onchange="check(this)" data-answer="танцевать">
+                    <option value="">--Wähle--</option>
+                    <option value="танцевать">танцевать</option>
+                    <option value="потанцуем">потанцуем</option>
+                </select>.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task10')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task10')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Sektion: Bewegungsverben -->
+        <h3>Bewegungsverben (идём / пойдём / пошли)</h3>
+
+        <div class="task-card" id="task11">
+            <span class="original-sentence">„я предлагаю тебе: Gehen wir spazieren!“</span>
+            <div class="transformation-area">
+                <select onchange="check(this)" data-answer="идём">
+                    <option value="">--Wähle--</option>
+                    <option value="идёт">идёт</option>
+                    <option value="идём">идём</option>
+                </select> гулять.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task11')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task11')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task12">
+            <span class="original-sentence">„я предлагаю вам: Gehen wir (jetzt los)!“</span>
+            <div class="transformation-area">
+                <select onchange="check(this)" data-answer="пойдёмте">
+                    <option value="">--Wähle--</option>
+                    <option value="пойдём">пойдём</option>
+                    <option value="пойдёмте">пойдёмте</option>
+                </select>.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task12')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task12')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task13">
+            <span class="original-sentence">„я предлагаю тебе: Fahren wir (los)!“ (umgangssprachlich)</span>
+            <div class="transformation-area">
+                <select onchange="check(this)" data-answer="поехали">
+                    <option value="">--Wähle--</option>
+                    <option value="ехали">ехали</option>
+                    <option value="поехали">поехали</option>
+                </select>!
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task13')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task13')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task14">
+            <span class="original-sentence">„я предлагаю тебе: Gehen wir essen!“ (umgangssprachlich)</span>
+            <div class="transformation-area">
+                <select onchange="check(this)" data-answer="пошли">
+                    <option value="">--Wähle--</option>
+                    <option value="пошли">пошли</option>
+                    <option value="шли">шли</option>
+                </select> обедать.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task14')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task14')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task15">
+            <span class="original-sentence">„я предлагаю вам: Laufen wir!“</span>
+            <div class="transformation-area">
+                <select onchange="check(this)" data-answer="побежали">
+                    <option value="">--Wähle--</option>
+                    <option value="бежим">бежим</option>
+                    <option value="побежали">побежали</option>
+                </select>!
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task15')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task15')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Sektion: Gemischt -->
+        <h3>Abschluss & Verbote (Mix)</h3>
+
+        <div class="task-card" id="task16">
+            <span class="original-sentence">„я хочу, чтобы он не курил.“ (Verbot)</span>
+            <div class="transformation-area">
+                пусть он 
+                <select onchange="check(this)" data-answer="не курит">
+                    <option value="">--Wähle--</option>
+                    <option value="не курит">не курит</option>
+                    <option value="не покурит">не покурит</option>
+                </select>.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task16')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task16')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task17">
+            <span class="original-sentence">„я предлагаю тебе: Lass uns nicht streiten.“</span>
+            <div class="transformation-area">
+                давай 
+                <select onchange="check(this)" data-answer="не спорить">
+                    <option value="">--Wähle--</option>
+                    <option value="не спорить">не спорить</option>
+                    <option value="не поспорим">не поспорим</option>
+                </select>.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task17')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task17')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task18">
+            <span class="original-sentence">„я хочу, чтобы они написали тест.“ (Resultat)</span>
+            <div class="transformation-area">
+                пускай они 
+                <select onchange="check(this)" data-answer="напишут">
+                    <option value="">--Wähle--</option>
+                    <option value="пишут">пишут</option>
+                    <option value="напишут">напишут</option>
+                </select> тест.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task18')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task18')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task19">
+            <span class="original-sentence">„я хочу, чтобы она не забыла об этом.“ (Verbot erfordert НСВ-Form: „nicht vergessen“)</span>
+            <div class="transformation-area">
+                пусть она 
+                <select onchange="check(this)" data-answer="не забывает">
+                    <option value="">--Wähle--</option>
+                    <option value="не забудет">не забудет</option>
+                    <option value="не забывает">не забывает</option>
+                </select> об этом.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task19')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task19')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task20">
+            <span class="original-sentence">„я предлагаю вам: Gehen wir (jetzt alle) essen!“</span>
+            <div class="transformation-area">
+                <select onchange="check(this)" data-answer="пойдёмте">
+                    <option value="">--Wähle--</option>
+                    <option value="идёмте">идёмте</option>
+                    <option value="пойдёмте">пойдёмте</option>
+                </select> обедать.
+            </div>
+            <div class="btn-container">
+                <button class="btn-reset" onclick="resetTask('task20')">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution('task20')">Lösung anzeigen</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function check(el) {
+        const selected = el.value;
+        const correct = el.getAttribute('data-answer');
+        
+        if (selected === "") {
+            el.className = "";
+        } else if (selected === correct) {
+            el.className = "correct";
+        } else {
+            el.className = "incorrect";
+        }
+    }
+
+    function resetTask(id) {
+        const container = document.getElementById(id);
+        const selects = container.querySelectorAll('select');
+        selects.forEach(s => {
+            s.value = "";
+            s.className = "";
+        });
+    }
+
+    function showSolution(id) {
+        const container = document.getElementById(id);
+        const selects = container.querySelectorAll('select');
+        selects.forEach(s => {
+            s.value = s.getAttribute('data-answer');
+            s.className = "correct";
+        });
+    }
+</script>
+
+</body>
+</html>
