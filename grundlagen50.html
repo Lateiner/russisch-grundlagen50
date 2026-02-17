@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Alternativen zum Imperativ</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .intro-box {
+            background-color: #e8f4fd;
+            padding: 20px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .task-container {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        .task-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
+            font-size: 1.1em;
+        }
+
+        /* Interaktive Elemente */
+        select {
+            padding: 8px 12px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 2px solid #ccc;
+            margin: 5px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .btn-controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            color: white;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-solution { background-color: #7f8c8d; }
+        button:hover { opacity: 0.8; }
+
+        /* Status-Farben */
+        .correct { border-color: var(--success-color) !important; background-color: #eafaf1; }
+        .incorrect { border-color: var(--error-color) !important; background-color: #fdedec; }
+
+        /* Drag and Drop */
+        .drag-zone {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #eee;
+            border-radius: 4px;
+        }
+
+        .drag-item {
+            background: var(--secondary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: grab;
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 120px;
+            height: 30px;
+            border-bottom: 2px dashed var(--secondary-color);
+            vertical-align: middle;
+            text-align: center;
+            margin: 0 5px;
+            padding: 2px 10px;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .radio-option {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .btn-controls { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik</h1>
+    <p><strong>Grundlagen: Alternativen zum Imperativ</strong></p>
+
+    <div class="intro-box">
+        <h2>Kurze Erklärung</h2>
+        <p>Manchmal nutzen wir im Russischen keinen direkten Imperativ, sondern andere Konstruktionen:</p>
+        <ul>
+            <li><strong>пусть / пускай:</strong> Wenn man möchte, dass eine dritte Person etwas tut. Beispiel: „пусть он идёт“ (Er soll gehen).</li>
+            <li><strong>давай / давайте:</strong> Für gemeinsame Vorschläge. Beispiel: „давай играть“ (Lass uns spielen).</li>
+            <li><strong>Verben der Bewegung:</strong> Formen wie „идём“ oder „пошли“ laden zum Mitkommen ein.</li>
+        </ul>
+        <p>Wichtig: Bei Verboten mit „пусть не“ steht immer der unvollendete Aspekt (НСВ).</p>
+    </div>
+
+    <div id="exercises">
+        <!-- Aufgaben 1-20 werden hier generiert oder hart codiert für maximale Kontrolle -->
+
+        <h3>Teil 1: Wünsche an Dritte (пусть / пускай)</h3>
+
+        <!-- Aufgabe 1 -->
+        <div class="task-container" id="task1">
+            <span class="task-title">1. „Er soll lesen“ (НСВ):</span>
+            пусть он <select onchange="instantCheck(this, 'читает')" data-ans="читает">
+                <option value="">--Wähle--</option>
+                <option value="читает">читает</option>
+                <option value="прочитать">прочитать</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(1)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(1)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 2 -->
+        <div class="task-container" id="task2">
+            <span class="task-title">2. „Sie soll das Brot kaufen“ (СВ - Resultat):</span>
+            пусть она <select onchange="instantCheck(this, 'купит')" data-ans="купит">
+                <option value="">--Wähle--</option>
+                <option value="покупает">покупает</option>
+                <option value="купит">купит</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(2)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(2)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 3 -->
+        <div class="task-container" id="task3">
+            <span class="task-title">3. Verneinung: „Sie sollen nicht schreien“ (Nur НСВ!):</span>
+            пускай они не <select onchange="instantCheck(this, 'кричат')" data-ans="кричат">
+                <option value="">--Wähle--</option>
+                <option value="крикнут">крикнут</option>
+                <option value="кричат">кричат</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(3)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(3)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 4 -->
+        <div class="task-container" id="task4">
+            <span class="task-title">4. „Lass ihn schlafen“:</span>
+            пусть он <select onchange="instantCheck(this, 'спит')" data-ans="спит">
+                <option value="">--Wähle--</option>
+                <option value="спит">спит</option>
+                <option value="поспать">поспать</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(4)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(4)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 5 -->
+        <div class="task-container" id="task5">
+            <span class="task-title">5. Forme um: „Ich will, dass er arbeitet“ = „... er soll arbeiten“:</span>
+            <select onchange="instantCheck(this, 'пусть')" data-ans="пусть">
+                <option value="">--Wähle--</option>
+                <option value="давай">давай</option>
+                <option value="пусть">пусть</option>
+            </select> он работает.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(5)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(5)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <h3>Teil 2: Gemeinsame Handlungen (давай / давайте)</h3>
+
+        <!-- Aufgabe 6 -->
+        <div class="task-container" id="task6">
+            <span class="task-title">6. Zu einem Freund: „Lass uns frühstücken“ (НСВ Infinitiv):</span>
+            давай <select onchange="instantCheck(this, 'завтракать')" data-ans="завтракать">
+                <option value="">--Wähle--</option>
+                <option value="завтракаем">завтракаем</option>
+                <option value="завтракать">завтракать</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(6)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(6)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 7 -->
+        <div class="task-container" id="task7">
+            <span class="task-title">7. Höflich: „Lassen Sie uns (das Lied) singen“ (СВ Wir-Form):</span>
+            давайте <select onchange="instantCheck(this, 'споём')" data-ans="споём">
+                <option value="">--Wähle--</option>
+                <option value="петь">петь</option>
+                <option value="споём">споём</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(7)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(7)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 8 -->
+        <div class="task-container" id="task8">
+            <span class="task-title">8. „Lass uns Tee trinken“:</span>
+            давай <select onchange="instantCheck(this, 'пить')" data-ans="пить">
+                <option value="">--Wähle--</option>
+                <option value="пить">пить</option>
+                <option value="выпить">выпить</option>
+            </select> чай.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(8)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(8)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 9 -->
+        <div class="task-container" id="task9">
+            <span class="task-title">9. Was passt hier NICHT? (Falsche Grammatik):</span>
+            <select onchange="instantCheck(this, 'давай работаем')" data-ans="давай работаем">
+                <option value="">--Wähle--</option>
+                <option value="давай работать">давай работать</option>
+                <option value="давай поработаем">давай поработаем</option>
+                <option value="давай работаем">давай работаем</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(9)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(9)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 10: Drag & Drop -->
+        <div class="task-container" id="task10">
+            <span class="task-title">10. Ziehe die Wörter in die Lücken (sofortiges Feedback):</span>
+            <div class="drag-zone">
+                <div class="drag-item" draggable="true" ondragstart="drag(event)" id="item10-1">давай</div>
+                <div class="drag-item" draggable="true" ondragstart="drag(event)" id="item10-2">давайте</div>
+            </div>
+            <p>Freund: <span class="drop-zone" id="drop10-1" ondrop="drop(event, 'давай')" ondragover="allowDrop(event)"></span></p>
+            <p>Chef: <span class="drop-zone" id="drop10-2" ondrop="drop(event, 'давайте')" ondragover="allowDrop(event)"></span></p>
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(10)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolutionDrag(10, ['давай', 'давайте'])">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <h3>Teil 3: Bewegung & Vorschläge (идём / пойдём)</h3>
+
+        <!-- Aufgabe 11 -->
+        <div class="task-container" id="task11">
+            <span class="task-title">11. „Gehen wir!“ (Du-Form):</span>
+            <select onchange="instantCheck(this, 'идём')" data-ans="идём">
+                <option value="">--Wähle--</option>
+                <option value="идём">идём</option>
+                <option value="идёмте">идёмте</option>
+            </select> гулять!
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(11)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(11)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 12 -->
+        <div class="task-container" id="task12">
+            <span class="task-title">12. Nach пойдём (СВ) steht die Wir-Form: „Gehen wir essen“:</span>
+            пойдём <select onchange="instantCheck(this, 'пообедаем')" data-ans="пообедаем">
+                <option value="">--Wähle--</option>
+                <option value="пообедать">пообедать</option>
+                <option value="пообедаем">пообедаем</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(12)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(12)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 13 -->
+        <div class="task-container" id="task13">
+            <span class="task-title">13. Welche Form ist höflich (Sie-Anrede)?</span>
+            <div class="radio-group">
+                <div class="radio-option" id="opt13-1">
+                    <input type="radio" name="r13" onclick="instantRadio(13, 'пойдёмте', this)"> пойдёмте
+                </div>
+                <div class="radio-option" id="opt13-2">
+                    <input type="radio" name="r13" onclick="instantRadio(13, 'пойдёмте', this)"> пойдём
+                </div>
+            </div>
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(13)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolutionRadio(13, 0)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 14 -->
+        <div class="task-container" id="task14">
+            <span class="task-title">14. „Gehen wir schwimmen“ (НСВ Infinitiv):</span>
+            идём <select onchange="instantCheck(this, 'плавать')" data-ans="плавать">
+                <option value="">--Wähle--</option>
+                <option value="плавать">плавать</option>
+                <option value="поплавать">поплавать</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(14)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(14)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 15 -->
+        <div class="task-container" id="task15">
+            <span class="task-title">15. „Fahren wir!“ (mit dem Auto):</span>
+            <select onchange="instantCheck(this, 'поехали')" data-ans="поехали">
+                <option value="">--Wähle--</option>
+                <option value="поехали">поехали</option>
+                <option value="ехали">ехали</option>
+            </select>!
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(15)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(15)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <h3>Teil 4: Umgangssprache & Besonderheiten</h3>
+
+        <!-- Aufgabe 16 -->
+        <div class="task-container" id="task16">
+            <span class="task-title">16. „Los geht's!“ (wörtlich: „Gegangen!“):</span>
+            <select onchange="instantCheck(this, 'пошли')" data-ans="пошли">
+                <option value="">--Wähle--</option>
+                <option value="пошли">пошли</option>
+                <option value="идти">идти</option>
+            </select>!
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(16)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(16)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 17 -->
+        <div class="task-container" id="task17">
+            <span class="task-title">17. „Lass uns hinfahren und essen“ (СВ):</span>
+            поехали <select onchange="instantCheck(this, 'поедим')" data-ans="поедим">
+                <option value="">--Wähle--</option>
+                <option value="есть">есть</option>
+                <option value="поедим">поедим</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(17)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(17)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 18 -->
+        <div class="task-container" id="task18">
+            <span class="task-title">18. Was ist grammatikalisch falsch?</span>
+            <select onchange="instantCheck(this, 'пошли пообедать')" data-ans="пошли poобедать">
+                <option value="">--Wähle--</option>
+                <option value="пошли обедать">пошли обедать</option>
+                <option value="пошли пообедаем">пошли пообедаем</option>
+                <option value="пошли пообедать">пошли пообедать</option>
+            </select>.
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(18)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(18)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 19 -->
+        <div class="task-container" id="task19">
+            <span class="task-title">19. „Lass uns rennen!“:</span>
+            <select onchange="instantCheck(this, 'побежали')" data-ans="побежали">
+                <option value="">--Wähle--</option>
+                <option value="бегаем">бегаем</option>
+                <option value="побежали">побежали</option>
+            </select>!
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(19)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(19)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 20 -->
+        <div class="task-container" id="task20">
+            <span class="task-title">20. „Lass uns hinfliegen“:</span>
+            <select onchange="instantCheck(this, 'полетели')" data-ans="полетели">
+                <option value="">--Wähle--</option>
+                <option value="полетели">полетели</option>
+                <option value="летим">летим</option>
+            </select>!
+            <div class="btn-controls">
+                <button class="btn-reset" onclick="resetTask(20)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(20)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Sofort-Check für Dropdowns
+    function instantCheck(el, correctAns) {
+        if (el.value === "") {
+            el.classList.remove('correct', 'incorrect');
+            return;
+        }
+        if (el.value === correctAns || el.value === el.getAttribute('data-ans')) {
+            el.classList.add('correct');
+            el.classList.remove('incorrect');
+        } else {
+            el.classList.add('incorrect');
+            el.classList.remove('correct');
+        }
+    }
+
+    // Sofort-Check für Radio Buttons
+    function instantRadio(taskId, correctVal, el) {
+        const parent = el.parentElement;
+        const group = document.getElementsByName('r' + taskId);
+        
+        // Reset styles for the whole group
+        group.forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
+
+        if (el.nextSibling.textContent.trim() === correctVal) {
+            parent.classList.add('correct');
+        } else {
+            parent.classList.add('incorrect');
+        }
+    }
+
+    // Reset Funktion
+    function resetTask(id) {
+        const container = document.getElementById('task' + id);
+        
+        // Selects
+        const selects = container.querySelectorAll('select');
+        selects.forEach(s => {
+            s.value = "";
+            s.classList.remove('correct', 'incorrect');
+        });
+
+        // Radios
+        const radios = container.querySelectorAll('input[type="radio"]');
+        radios.forEach(r => {
+            r.checked = false;
+            r.parentElement.classList.remove('correct', 'incorrect');
+        });
+
+        // Drag & Drop
+        const drops = container.querySelectorAll('.drop-zone');
+        drops.forEach(d => {
+            d.innerText = "";
+            d.classList.remove('correct', 'incorrect');
+        });
+    }
+
+    // Lösung anzeigen für Selects
+    function showSolution(id) {
+        const select = document.getElementById('task' + id).querySelector('select');
+        select.value = select.getAttribute('data-ans');
+        select.classList.add('correct');
+        select.classList.remove('incorrect');
+    }
+
+    // Lösung anzeigen für Radio
+    function showSolutionRadio(taskId, correctIdx) {
+        const group = document.getElementsByName('r' + taskId);
+        group.forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
+        group[correctIdx].checked = true;
+        group[correctIdx].parentElement.classList.add('correct');
+    }
+
+    // Drag & Drop Logic
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.innerText);
+    }
+
+    function drop(ev, correctVal) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        ev.target.innerText = data;
+        
+        if (data === correctVal) {
+            ev.target.classList.add('correct');
+            ev.target.classList.remove('incorrect');
+        } else {
+            ev.target.classList.add('incorrect');
+            ev.target.classList.remove('correct');
+        }
+    }
+
+    function showSolutionDrag(taskId, answers) {
+        const drops = document.getElementById('task' + taskId).querySelectorAll('.drop-zone');
+        drops.forEach((d, i) => {
+            d.innerText = answers[i];
+            d.classList.add('correct');
+            d.classList.remove('incorrect');
+        });
+    }
+</script>
+
+</body>
+</html>
