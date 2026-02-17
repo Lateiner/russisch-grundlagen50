@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lernkartei: Alternativen zum Imperativ</title>
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #81c784;
+            --bg-green: #f1f8e9;
+            --accent-green: #1b5e20;
+            --card-shadow: rgba(0, 0, 0, 0.2);
+            --transition-speed: 0.6s;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-green);
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-green);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Fortschrittsanzeige */
+        .progress {
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--primary-green);
+            font-size: 1.1rem;
+        }
+
+        /* Flashcard Area */
+        .flashcard-wrapper {
+            perspective: 1000px;
+            width: 100%;
+            height: 300px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform var(--transition-speed);
+            box-shadow: 0 10px 25px var(--card-shadow);
+            border-radius: 15px;
+        }
+
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+            border-radius: 15px;
+            background: white;
+            border: 4px solid var(--light-green);
+        }
+
+        .card-face-back {
+            transform: rotateY(180deg);
+            background-color: #ffffff;
+            border-color: var(--primary-green);
+        }
+
+        .vokabel-text {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            margin: 0;
+        }
+
+        .russian {
+            font-weight: bold;
+            color: var(--accent-green);
+        }
+
+        .german {
+            color: #444;
+        }
+
+        /* Controls */
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .nav-buttons {
+            grid-column: span 2;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary-green);
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            flex: 1;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: var(--accent-green);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .secondary-btn {
+            background-color: #689f38;
+        }
+
+        /* Keyboard Hints */
+        .shortcuts {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #777;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            .flashcard-wrapper {
+                height: 250px;
+            }
+            h1 { font-size: 1.4rem; }
+            button { padding: 10px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Russisch Vokabeltrainer</h1>
+        
+        <div class="progress" id="progress-text">1 / 90</div>
+
+        <div class="flashcard-wrapper" id="card-trigger">
+            <div class="flashcard" id="flashcard">
+                <div class="card-face card-face-front">
+                    <p class="vokabel-text russian" id="text-front">Vorderseite</p>
+                </div>
+                <div class="card-face card-face-back">
+                    <p class="vokabel-text german" id="text-back">Rückseite</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="nav-buttons">
+                <button id="btn-prev">← Vorherige</button>
+                <button id="btn-next">Nächste →</button>
+            </div>
+            <button class="secondary-btn" id="btn-shuffle">🔀 Mischen</button>
+            <button class="secondary-btn" id="btn-home">🏠 An den Anfang</button>
+        </div>
+
+        <div class="shortcuts">
+            Tastatur: Pfeiltasten (← →) zum Blättern<br>
+            Leertaste / Enter zum Umdrehen | Pos1 für Anfang
+        </div>
+    </div>
+
+    <script>
+        const rawData = [
+            ["пусть / пуска́й", "lass / lassen / soll(en)"],
+            ["дава́й / дава́йте", "lass uns / lassen Sie uns"],
+            ["что́бы", "damit / dass (nach Verben des Wunsches)"],
+            ["вме́сте", "zusammen / gemeinsam"],
+            ["идти́ / пойти́", "gehen"],
+            ["е́хать / пое́хать", "fahren"],
+            ["бежа́ть / побежа́ть", "rennen / laufen"],
+            ["лете́ть / полете́ть", "fliegen"],
+            ["плыть / поплы́ть", "schwimmen / schwimmen (zielgerichtet)"],
+            ["пла́вать / попла́вать", "schwimmen (Tätigkeit)"],
+            ["хоте́ть / захоте́ть", "wollen"],
+            ["чита́ть / прочита́ть", "lesen"],
+            ["писа́ть / написа́ть", "schreiben"],
+            ["за́втракать / поза́втракать", "frühstücken"],
+            ["обе́дать / пообе́дать", "zu Mittag essen"],
+            ["у́жинать / поу́жинать", "zu Abend essen"],
+            ["пить / вы́пить", "trinken"],
+            ["есть / съесть", "essen"],
+            ["покупа́ть / купи́ть", "kaufen"],
+            ["звони́ть / позвони́ть", "anrufen / telefonieren"],
+            ["де́лать / сде́лать", "machen / tun"],
+            ["зака́нчивать / зако́нчить", "beenden / abschließen"],
+            ["закрыва́ть / закры́ть", "schließen"],
+            ["открыва́ть / откры́ть", "öffnen"],
+            ["включа́ть / включи́ть", "einschalten / anmachen"],
+            ["спать / поспа́ть", "schlafen"],
+            ["крича́ть / кри́кнуть", "schreien / rufen"],
+            ["опа́здывать / опозда́ть", "sich verspäten"],
+            ["рабо́тать / порабо́тать", "arbeiten"],
+            ["петь / спеть", "singen"],
+            ["спо́рить / поспо́рить", "streiten"],
+            ["понима́ть / поня́ть", "verstehen"],
+            ["совето́вать / посовето́вать", "raten / empfehlen"],
+            ["смотре́ть / посмотре́ть", "schauen / ansehen"],
+            ["начина́ть / нача́ть", "beginnen / anfangen"],
+            ["забыва́ть / забы́ть", "vergessen"],
+            ["гото́вить / пригото́вить", "zubereiten / kochen"],
+            ["выбира́ть / вы́брать", "wählen / auswählen"],
+            ["слу́шать / послу́шать", "hören / zuhören"],
+            ["слы́шать / услы́шать", "hören (Wahrnehmung)"],
+            ["узнава́ть / узна́ть", "erfahren / erkennen / herausfinden"],
+            ["пока́зывать / показа́ть", "zeigen"],
+            ["меня́ть / поменя́ть", "ändern / wechseln"],
+            ["тренирова́ться / потренирова́ться", "trainieren / üben"],
+            ["проверя́ть / прове́рить", "prüfen / kontrollieren"],
+            ["пуга́ть / испуга́ть", "erschrecken / Angst machen"],
+            ["предлага́ть / предложи́ть", "vorschlagen"],
+            ["расска́зывать / рассказа́ть", "erzählen"],
+            ["рисова́ть / нарисова́ть", "zeichnen / malen"],
+            ["спра́шивать / спроси́ть", "fragen"],
+            ["отвеча́ть / отве́тить", "antworten"],
+            ["спорза́л", "Fitnessstudio"],
+            ["сыр", "Käse"],
+            ["подру́га", "Freundin"],
+            ["по́зже", "später"],
+            ["ра́ньше", "früher"],
+            ["витами́ны", "Vitamine"],
+            ["вино́", "Wein"],
+            ["чай", "Tee"],
+            ["ко́фе", "Kaffee"],
+            ["сок", "Saft"],
+            ["молоко́", "Milch"],
+            ["хлеб", "Brot"],
+            ["кино́", "Kino"],
+            ["парк", "Park"],
+            ["у́лица", "Straße"],
+            ["пра́вда", "Wahrheit"],
+            ["да́ча", "Datscha / Landhaus"],
+            ["биле́т", "Ticket / Fahrkarte"],
+            ["бе́рег", "Ufer / Küste"],
+            ["мо́ре", "Meer"],
+            ["остано́вка", "Haltestelle"],
+            ["прое́кт", "Projekt"],
+            ["уро́к", "Unterrichtsstunde / Lektion"],
+            ["зада́ние", "Aufgabe"],
+            ["оши́бка", "Fehler"],
+            ["слу́чай", "Fall / Ereignis"],
+            ["фра́за", "Phrase / Satz"],
+            ["уда́ча", "Glück / Erfolg"],
+            ["де́ти", "Kinder"],
+            ["са́м / сама́ / са́ми", "selbst"],
+            ["бы́стро", "schnell"],
+            ["ме́дленно", "langsam"],
+            ["совсе́м", "völlig / ganz"],
+            ["то́лько", "nur"],
+            ["сейча́с", "jetzt"],
+            ["сего́дня", "heute"],
+            ["за́втра", "morgen"],
+            ["вчера́", "gestern"],
+            ["тогда́", "dann / damals"]
+        ];
+
+        let cards = [...rawData];
+        let currentIndex = 0;
+
+        const flashcard = document.getElementById('flashcard');
+        const textFront = document.getElementById('text-front');
+        const textBack = document.getElementById('text-back');
+        const progressText = document.getElementById('progress-text');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const btnShuffle = document.getElementById('btn-shuffle');
+        const btnHome = document.getElementById('btn-home');
+        const cardTrigger = document.getElementById('card-trigger');
+
+        function updateDisplay() {
+            // Karte zurückdrehen, bevor neue Inhalte kommen
+            flashcard.classList.remove('is-flipped');
+            
+            setTimeout(() => {
+                const currentData = cards[currentIndex];
+                textFront.innerText = currentData[0];
+                textBack.innerText = currentData[1];
+                progressText.innerText = `${currentIndex + 1} / ${cards.length}`;
+                
+                adjustFontSize(textFront);
+                adjustFontSize(textBack);
+            }, 150);
+        }
+
+        function adjustFontSize(element) {
+            const length = element.innerText.length;
+            if (length > 50) {
+                element.style.fontSize = "1.1rem";
+            } else if (length > 25) {
+                element.style.fontSize = "1.4rem";
+            } else {
+                element.style.fontSize = "1.8rem";
+            }
+        }
+
+        function flipCard() {
+            flashcard.classList.toggle('is-flipped');
+        }
+
+        function nextCard() {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+                updateDisplay();
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateDisplay();
+            }
+        }
+
+        function shuffleCards() {
+            // Fisher-Yates Shuffle
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+            currentIndex = 0;
+            updateDisplay();
+        }
+
+        function goHome() {
+            currentIndex = 0;
+            updateDisplay();
+        }
+
+        // Event Listeners für Buttons
+        cardTrigger.addEventListener('click', flipCard);
+        btnNext.addEventListener('click', nextCard);
+        btnPrev.addEventListener('click', prevCard);
+        btnShuffle.addEventListener('click', shuffleCards);
+        btnHome.addEventListener('click', goHome);
+
+        // Tastatursteuerung
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case ' ':
+                case 'Enter':
+                    e.preventDefault(); // Verhindert Scrollen bei Leertaste
+                    flipCard();
+                    break;
+                case 'ArrowLeft':
+                    prevCard();
+                    break;
+                case 'ArrowRight':
+                    nextCard();
+                    break;
+                case 'Home':
+                    goHome();
+                    break;
+            }
+        });
+
+        // Initiale Anzeige
+        updateDisplay();
+    </script>
+</body>
+</html>
