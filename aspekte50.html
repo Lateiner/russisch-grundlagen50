@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Aspekt-Entscheidung im Imperativ</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --border-radius: 10px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 { text-align: center; color: var(--primary-color); border-bottom: 3px solid var(--secondary-color); padding-bottom: 10px; }
+        h2 { color: var(--secondary-color); margin-top: 30px; }
+
+        .intro-box {
+            background-color: #eef7ff;
+            padding: 20px;
+            border-left: 6px solid var(--secondary-color);
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .task-card {
+            background: #fafafa;
+            border: 1px solid #e1e1e1;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .task-title { font-weight: bold; display: block; margin-bottom: 10px; color: #444; }
+
+        /* Interaktive Elemente */
+        select {
+            padding: 8px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            margin: 5px 0;
+            width: auto;
+            max-width: 100%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-solution { background-color: #7f8c8d; }
+        button:hover { opacity: 0.8; }
+
+        /* Feedback-Styles */
+        .correct { border-color: var(--success-color) !important; background-color: #d4edda !important; color: #155724; }
+        .incorrect { border-color: var(--error-color) !important; background-color: #f8d7da !important; color: #721c24; }
+
+        /* Radio Buttons */
+        .radio-container { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .radio-option {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .radio-option input { margin-right: 10px; }
+
+        /* Drag and Drop */
+        .drag-box { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; padding: 10px; background: #eee; border-radius: 5px; }
+        .drag-item { background: var(--secondary-color); color: white; padding: 8px 12px; border-radius: 4px; cursor: grab; }
+        .drop-zone {
+            display: inline-block;
+            min-width: 130px;
+            height: 30px;
+            border-bottom: 2px dashed var(--secondary-color);
+            vertical-align: middle;
+            text-align: center;
+            padding: 0 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik</h1>
+    <p style="text-align: center;">Grundlagen: Alternativen zum Imperativ</p>
+
+    <div class="intro-box">
+        <h2>Aspekt-Entscheidung: НСВ oder СВ?</h2>
+        <p>In Konstruktionen wie <strong>пусть</strong> (er soll), <strong>давай</strong> (lass uns) oder <strong>пойдём</strong> (gehen wir) musst du den richtigen Aspekt wählen:</p>
+        <ul>
+            <li><strong>НСВ (Unvollendet):</strong> Prozess, Wiederholung, allgemeine Handlung, Verbote (после „не“).</li>
+            <li><strong>СВ (Vollendet):</strong> Resultat, einmalige Handlung, Abschluss einer Tat.</li>
+        </ul>
+        <p><strong>Merke:</strong> Nach „давай“ folgt bei НСВ der Infinitiv (давай читать), bei СВ jedoch die „Wir-Form“ (давай прочитаем).</p>
+    </div>
+
+    <!-- Aufgaben -->
+    <div id="tasks-container">
+        
+        <h3>1. Aufforderungen mit пусть / пускай</h3>
+
+        <div class="task-card" id="task1">
+            <span class="task-title">1. Einmaliges Resultat: „Lass ihn diese Übung bis Ende schreiben.“</span>
+            пусть он <select onchange="checkSelect(this, 'допишет')" data-ans="допишет">
+                <option value="">--Wähle--</option>
+                <option value="дописывает">дописывает (НСВ)</option>
+                <option value="допишет">допишет (СВ)</option>
+            </select> эту упражнение до конца.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(1)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(1)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task2">
+            <span class="task-title">2. Regelmäßige Handlung: „Lass sie jeden Morgen Vitamine trinken.“</span>
+            пускай она каждое утро <select onchange="checkSelect(this, 'пьёт')" data-ans="пьёт">
+                <option value="">--Wähle--</option>
+                <option value="пьёт">пьёт (НСВ)</option>
+                <option value="выпьет">выпьет (СВ)</option>
+            </select> витамины.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(2)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(2)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task3">
+            <span class="task-title">3. Verbot (Immer НСВ): „Sie sollen hier nicht rauchen.“</span>
+            пусть они здесь не <select onchange="checkSelect(this, 'курят')" data-ans="курят">
+                <option value="">--Wähle--</option>
+                <option value="курят">курят (НСВ)</option>
+                <option value="покурят">покурят (СВ)</option>
+            </select>.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(3)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(3)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task4">
+            <span class="task-title">4. „Lass ihn den ganzen Tag schlafen.“ (Prozess)</span>
+            пусть он <select onchange="checkSelect(this, 'спит')" data-ans="спит">
+                <option value="">--Wähle--</option>
+                <option value="спит">спит (НСВ)</option>
+                <option value="поспит">поспит (СВ)</option>
+            </select> весь день.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(4)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(4)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task5">
+            <span class="task-title">5. Einmaliges Resultat: „Lass sie das Fenster schließen.“</span>
+            пускай она <select onchange="checkSelect(this, 'закроет')" data-ans="закроет">
+                <option value="">--Wähle--</option>
+                <option value="закрывает">закрывает (НСВ)</option>
+                <option value="закроет">закроет (СВ)</option>
+            </select> окно.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(5)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(5)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <h3>2. Gemeinsame Handlungen mit давай / давайте</h3>
+
+        <div class="task-card" id="task6">
+            <span class="task-title">6. Vorschlag einer Tätigkeit (НСВ Infinitiv): „Lass uns frühstücken.“</span>
+            давай <select onchange="checkSelect(this, 'завтракать')" data-ans="завтракать">
+                <option value="">--Wähle--</option>
+                <option value="завтракать">завтракать (НСВ Inf.)</option>
+                <option value="позавтракаем">позавтракаем (СВ Wir-Form)</option>
+            </select>.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(6)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(6)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task7">
+            <span class="task-title">7. Fokus auf das Resultat (СВ Wir-Form): „Lass uns diesen Text übersetzen.“</span>
+            давайте <select onchange="checkSelect(this, 'переведём')" data-ans="переведём">
+                <option value="">--Wähle--</option>
+                <option value="переводить">переводить (НСВ Inf.)</option>
+                <option value="переведём">переведём (СВ Wir-Form)</option>
+            </select> этот текст.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(7)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(7)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task8">
+            <span class="task-title">8. Prozess: „Lass uns Wein trinken“ (Die Tätigkeit an sich).</span>
+            давай <select onchange="checkSelect(this, 'пить')" data-ans="пить">
+                <option value="">--Wähle--</option>
+                <option value="пить">пить (НСВ Inf.)</option>
+                <option value="выпьем">выпьем (СВ Wir-Form)</option>
+            </select> вино.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(8)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(8)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task9">
+            <span class="task-title">9. Einmaliger Abschluss: „Lass uns das Video zu Ende schauen.“</span>
+            давайте <select onchange="checkSelect(this, 'посмотрим')" data-ans="посмотрим">
+                <option value="">--Wähle--</option>
+                <option value="смотреть">смотреть (НСВ Inf.)</option>
+                <option value="посмотрим">посмотрим (СВ Wir-Form)</option>
+            </select> видео до конца.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(9)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(9)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task10">
+            <span class="task-title">10. Drag & Drop: Welcher Aspekt passt zur Bedeutung?</span>
+            <div class="drag-box">
+                <div class="drag-item" draggable="true" ondragstart="drag(event)" id="d10-1">НСВ</div>
+                <div class="drag-item" draggable="true" ondragstart="drag(event)" id="d10-2">СВ</div>
+            </div>
+            <p>Давай поужинаем (Fokus auf Essen beenden): <span class="drop-zone" ondrop="drop(event, 'СВ')" ondragover="allowDrop(event)"></span></p>
+            <p>Давай ужинать (Fokus auf Beginn/Tätigkeit): <span class="drop-zone" ondrop="drop(event, 'НСВ')" ondragover="allowDrop(event)"></span></p>
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(10)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolutionDrag(10, ['СВ', 'НСВ'])">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <h3>3. Bewegungsverben (идём / пойдём)</h3>
+
+        <div class="task-card" id="task11">
+            <span class="task-title">11. „Gehen wir schwimmen“ (Tätigkeit, НСВ).</span>
+            идём <select onchange="checkSelect(this, 'плавать')" data-ans="плавать">
+                <option value="">--Wähle--</option>
+                <option value="плавать">плавать (НСВ)</option>
+                <option value="поплавать">поплавать (СВ)</option>
+            </select>.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(11)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(11)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task12">
+            <span class="task-title">12. „Gehen wir mal (kurz) spazieren“ (Zeitliche Begrenzung, СВ).</span>
+            пойдём <select onchange="checkSelect(this, 'погуляем')" data-ans="погуляем">
+                <option value="">--Wähle--</option>
+                <option value="гулять">гулять (НСВ)</option>
+                <option value="погуляем">погуляем (СВ Wir-Form)</option>
+            </select>.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(12)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(12)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task13">
+            <span class="task-title">13. Wahl der Form: „Gehen wir essen.“</span>
+            <div class="radio-container">
+                <label class="radio-option" onclick="checkRadio(13, true, this)">
+                    <input type="radio" name="r13"> пойдём пообедаем (СВ - Resultat)
+                </label>
+                <label class="radio-option" onclick="checkRadio(13, false, this)">
+                    <input type="radio" name="r13"> пойдём пообедать (Grammatisch falsch)
+                </label>
+            </div>
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(13)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolutionRadio(13, 0)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task14">
+            <span class="task-title">14. „Fahren wir!“ (mit dem Auto, Start der Handlung).</span>
+            <select onchange="checkSelect(this, 'поехали')" data-ans="поехали">
+                <option value="">--Wähle--</option>
+                <option value="ехали">ехали</option>
+                <option value="поехали">поехали</option>
+            </select>.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(14)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(14)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task15">
+            <span class="task-title">15. „Lass uns (mit dem Zug) hinfahren“ (Zielgerichtet, СВ).</span>
+            поехали <select onchange="checkSelect(this, 'купим')" data-ans="купим">
+                <option value="">--Wähle--</option>
+                <option value="покупать">покупать (НСВ)</option>
+                <option value="купим">купим (СВ Wir-Form)</option>
+            </select> билеты.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(15)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(15)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <h3>4. Vermischte Aspekt-Übungen</h3>
+
+        <div class="task-card" id="task16">
+            <span class="task-title">16. „Lass uns tanzen“ (Dauerhaft/Tätigkeit).</span>
+            давай <select onchange="checkSelect(this, 'танцевать')" data-ans="танцевать">
+                <option value="">--Wähle--</option>
+                <option value="танцевать">танцевать (НСВ)</option>
+                <option value="потанцуем">потанцуем (СВ)</option>
+            </select>.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(16)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(16)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task17">
+            <span class="task-title">17. „Lass uns (einmalig) tanzen“ (Dieses eine Lied).</span>
+            давай <select onchange="checkSelect(this, 'потанцуем')" data-ans="потанцуем">
+                <option value="">--Wähle--</option>
+                <option value="танцевать">танцевать (НСВ)</option>
+                <option value="потанцуем">потанцуем (СВ)</option>
+            </select>.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(17)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(17)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task18">
+            <span class="task-title">18. Verbot: „Er soll die Musik nicht anmachen.“ (НСВ).</span>
+            пусть он не <select onchange="checkSelect(this, 'включает')" data-ans="включает">
+                <option value="">--Wähle--</option>
+                <option value="включает">включает (НСВ)</option>
+                <option value="включит">включит (СВ)</option>
+            </select> музыку.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(18)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(18)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task19">
+            <span class="task-title">19. „Lass uns (gemeinsam) das Problem lösen.“ (Resultat).</span>
+            давайте <select onchange="checkSelect(this, 'решим')" data-ans="решим">
+                <option value="">--Wähle--</option>
+                <option value="решать">решать (НСВ)</option>
+                <option value="решим">решим (СВ)</option>
+            </select> проблему.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(19)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(19)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task20">
+            <span class="task-title">20. „Lass uns (jetzt sofort) rennen!“ (Start der Handlung).</span>
+            побежали <select onchange="checkSelect(this, 'поплаваем')" data-ans="поплаваем">
+                <option value="">--Wähle--</option>
+                <option value="плавать">плавать (НСВ)</option>
+                <option value="поплаваем">поплаваем (СВ)</option>
+            </select>.
+            <div class="btn-group">
+                <button class="btn-reset" onclick="resetTask(20)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(20)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Sofortige Überprüfung für Select-Elemente
+    function checkSelect(el, correctAns) {
+        if (el.value === correctAns) {
+            el.className = "correct";
+        } else if (el.value === "") {
+            el.className = "";
+        } else {
+            el.className = "incorrect";
+        }
+    }
+
+    // Radio Button Überprüfung
+    function checkRadio(taskId, isCorrect, el) {
+        const options = document.getElementById('task' + taskId).querySelectorAll('.radio-option');
+        options.forEach(opt => opt.className = 'radio-option');
+        if (isCorrect) {
+            el.className = 'radio-option correct';
+        } else {
+            el.className = 'radio-option incorrect';
+        }
+    }
+
+    // Reset Funktion
+    function resetTask(id) {
+        const container = document.getElementById('task' + id);
+        const selects = container.querySelectorAll('select');
+        selects.forEach(s => { s.value = ""; s.className = ""; });
+        
+        const radios = container.querySelectorAll('input');
+        radios.forEach(r => r.checked = false);
+        const radioOpts = container.querySelectorAll('.radio-option');
+        radioOpts.forEach(o => o.className = 'radio-option');
+
+        const drops = container.querySelectorAll('.drop-zone');
+        drops.forEach(d => { d.innerText = ""; d.className = "drop-zone"; });
+    }
+
+    // Lösung anzeigen
+    function showSolution(id) {
+        const select = document.getElementById('task' + id).querySelector('select');
+        if (select) {
+            select.value = select.getAttribute('data-ans');
+            select.className = "correct";
+        }
+    }
+
+    function showSolutionRadio(taskId, idx) {
+        const options = document.getElementById('task' + taskId).querySelectorAll('.radio-option');
+        options.forEach(opt => opt.className = 'radio-option');
+        options[idx].className = 'radio-option correct';
+        options[idx].querySelector('input').checked = true;
+    }
+
+    // Drag & Drop
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.innerText); }
+    function drop(ev, correctVal) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        ev.target.innerText = data;
+        if (data === correctVal) {
+            ev.target.className = "drop-zone correct";
+        } else {
+            ev.target.className = "drop-zone incorrect";
+        }
+    }
+    function showSolutionDrag(taskId, answers) {
+        const zones = document.getElementById('task' + taskId).querySelectorAll('.drop-zone');
+        zones.forEach((z, i) => {
+            z.innerText = answers[i];
+            z.className = "drop-zone correct";
+        });
+    }
+</script>
+
+</body>
+</html>
