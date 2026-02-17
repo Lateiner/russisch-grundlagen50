@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Situations-Matching</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+            font-style: normal; /* Keine Kursivschrift */
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: var(--primary-color);
+            font-style: normal;
+        }
+
+        .intro-box {
+            background-color: #e8f4fd;
+            padding: 20px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .task-card {
+            background: #fff;
+            border: 2px solid #eee;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+
+        .situation-desc {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            color: #2980b9;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: #f9f9f9;
+        }
+
+        input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        /* Feedback-Farben */
+        .correct-opt {
+            background-color: #d4edda !important;
+            border-color: var(--success-color) !important;
+            color: #155724;
+        }
+
+        .incorrect-opt {
+            background-color: #f8d7da !important;
+            border-color: var(--error-color) !important;
+            color: #721c24;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-solution { background-color: #7f8c8d; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .option-label { font-size: 14px; }
+        }
+
+        /* Sicherstellen, dass nichts kursiv ist */
+        * {
+            font-style: normal !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik</h1>
+    <h2>Situations-Matching: Die richtige Wahl</h2>
+
+    <div class="intro-box">
+        <p>Wähle für jede Situation die natürlichste russische Reaktion aus. Achte auf den Kontext: Sprichst du mit einem Freund, einer Gruppe oder einer Respektperson? Geht es um ein Verbot oder einen gemeinsamen Plan?</p>
+    </div>
+
+    <div id="quiz-container">
+        <!-- Aufgabe 1 -->
+        <div class="task-card" id="task1">
+            <span class="situation-desc">1. Du schlägst deinem Chef (Sie-Form) vor, jetzt in die Mittagspause zu gehen:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(1, 'b', this)">
+                    <input type="radio" name="q1" value="a"> пошли обедать!
+                </label>
+                <label class="option-label" onclick="checkRadio(1, 'b', this)">
+                    <input type="radio" name="q1" value="b"> пойдёмте обедать?
+                </label>
+                <label class="option-label" onclick="checkRadio(1, 'b', this)">
+                    <input type="radio" name="q1" value="c"> давай обедаем.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(1)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(1, 1)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 2 -->
+        <div class="task-card" id="task2">
+            <span class="situation-desc">2. Du möchtest, dass dein kleiner Bruder sein Zimmer aufräumt (Wunsch an Dritte):</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(2, 'a', this)">
+                    <input type="radio" name="q2" value="a"> пусть он уберёт комнату.
+                </label>
+                <label class="option-label" onclick="checkRadio(2, 'a', this)">
+                    <input type="radio" name="q2" value="b"> давай он уберёт комнату.
+                </label>
+                <label class="option-label" onclick="checkRadio(2, 'a', this)">
+                    <input type="radio" name="q2" value="c"> пойдём убрать комнату.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(2)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(2, 0)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 3 -->
+        <div class="task-card" id="task3">
+            <span class="situation-desc">3. Du sagst deinem besten Freund, dass ihr jetzt gemeinsam Tee trinken sollt (Beginn der Handlung):</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(3, 'c', this)">
+                    <input type="radio" name="q3" value="a"> давайте пить чай.
+                </label>
+                <label class="option-label" onclick="checkRadio(3, 'c', this)">
+                    <input type="radio" name="q3" value="b"> пусть мы пьём чай.
+                </label>
+                <label class="option-label" onclick="checkRadio(3, 'c', this)">
+                    <input type="radio" name="q3" value="c"> давай пить чай.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(3)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(3, 2)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 4 -->
+        <div class="task-card" id="task4">
+            <span class="situation-desc">4. Du forderst eine Gruppe von Kollegen auf, morgen pünktlich zu sein:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(4, 'a', this)">
+                    <input type="radio" name="q4" value="a"> давайте завтра не опаздывать.
+                </label>
+                <label class="option-label" onclick="checkRadio(4, 'a', this)">
+                    <input type="radio" name="q4" value="b"> давай завтра не опоздаем.
+                </label>
+                <label class="option-label" onclick="checkRadio(4, 'a', this)">
+                    <input type="radio" name="q4" value="c"> пошли не опаздывать.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(4)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(4, 0)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 5 -->
+        <div class="task-card" id="task5">
+            <span class="situation-desc">5. Du bist mit Freunden im Auto und willst, dass es endlich losgeht:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(5, 'b', this)">
+                    <input type="radio" name="q5" value="a"> идём!
+                </label>
+                <label class="option-label" onclick="checkRadio(5, 'b', this)">
+                    <input type="radio" name="q5" value="b"> поехали!
+                </label>
+                <label class="option-label" onclick="checkRadio(5, 'b', this)">
+                    <input type="radio" name="q5" value="c"> пусть едем!
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(5)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(5, 1)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 6 -->
+        <div class="task-card" id="task6">
+            <span class="situation-desc">6. Du möchtest, dass die Gäste (Dritte) nicht im Haus rauchen (Verbot):</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(6, 'c', this)">
+                    <input type="radio" name="q6" value="a"> пускай они не покурят в доме.
+                </label>
+                <label class="option-label" onclick="checkRadio(6, 'c', this)">
+                    <input type="radio" name="q6" value="b"> давай они не курят в доме.
+                </label>
+                <label class="option-label" onclick="checkRadio(6, 'c', this)">
+                    <input type="radio" name="q6" value="c"> пусть они не курят в доме.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(6)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(6, 2)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 7 -->
+        <div class="task-card" id="task7">
+            <span class="situation-desc">7. Du schlägst einer Freundin vor, den Kuchen gemeinsam aufzuessen (Resultat):</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(7, 'a', this)">
+                    <input type="radio" name="q7" value="a"> давай съедим торт.
+                </label>
+                <label class="option-label" onclick="checkRadio(7, 'a', this)">
+                    <input type="radio" name="q7" value="b"> давай есть торт.
+                </label>
+                <label class="option-label" onclick="checkRadio(7, 'a', this)">
+                    <input type="radio" name="q7" value="c"> пусть мы едим торт.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(7)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(7, 0)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 8 -->
+        <div class="task-card" id="task8">
+            <span class="situation-desc">8. Ihr seid spät dran und du forderst deine Freunde zum Rennen auf:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(8, 'b', this)">
+                    <input type="radio" name="q8" value="a"> пошли медленно.
+                </label>
+                <label class="option-label" onclick="checkRadio(8, 'b', this)">
+                    <input type="radio" name="q8" value="b"> побежали!
+                </label>
+                <label class="option-label" onclick="checkRadio(8, 'b', this)">
+                    <input type="radio" name="q8" value="c"> давай бежим.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(8)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(8, 1)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 9 -->
+        <div class="task-card" id="task9">
+            <span class="situation-desc">9. Du möchtest höflich vorschlagen, dass ihr (alle Gäste) jetzt den Wein probiert:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(9, 'a', this)">
+                    <input type="radio" name="q9" value="a"> давайте попробуем вино.
+                </label>
+                <label class="option-label" onclick="checkRadio(9, 'a', this)">
+                    <input type="radio" name="q9" value="b"> давай попробуем вино.
+                </label>
+                <label class="option-label" onclick="checkRadio(9, 'a', this)">
+                    <input type="radio" name="q9" value="c"> пошли пробовать вино.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(9)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(9, 0)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgabe 10 -->
+        <div class="task-card" id="task10">
+            <span class="situation-desc">10. Du willst, dass dein Mitbewohner (Dritter) endlich das Geschirr spült:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(10, 'b', this)">
+                    <input type="radio" name="q10" value="a"> пусть он моет посуду один раз.
+                </label>
+                <label class="option-label" onclick="checkRadio(10, 'b', this)">
+                    <input type="radio" name="q10" value="b"> пусть он помоет посуду.
+                </label>
+                <label class="option-label" onclick="checkRadio(10, 'b', this)">
+                    <input type="radio" name="q10" value="c"> идём помыть посуду.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(10)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(10, 1)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Aufgaben 11-20 (verkürzt für den Code-Block, aber vollständig funktional) -->
+        <div class="task-card" id="task11">
+            <span class="situation-desc">11. Du bist mit Freunden am Strand und schlägst vor, jetzt schwimmen zu gehen:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(11, 'c', this)">
+                    <input type="radio" name="q11" value="a"> пусть мы плаваем.
+                </label>
+                <label class="option-label" onclick="checkRadio(11, 'c', this)">
+                    <input type="radio" name="q11" value="b"> давайте плаваем.
+                </label>
+                <label class="option-label" onclick="checkRadio(11, 'c', this)">
+                    <input type="radio" name="q11" value="c"> идём плавать!
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(11)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(11, 2)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task12">
+            <span class="situation-desc">12. Du möchtest, dass eine Freundin (Dritte) heute nicht arbeitet:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(12, 'a', this)">
+                    <input type="radio" name="q12" value="a"> пусть она сегодня не работает.
+                </label>
+                <label class="option-label" onclick="checkRadio(12, 'a', this)">
+                    <input type="radio" name="q12" value="b"> пускай она сегодня не поработает.
+                </label>
+                <label class="option-label" onclick="checkRadio(12, 'a', this)">
+                    <input type="radio" name="q12" value="c"> давай она не работает.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(12)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(12, 0)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task13">
+            <span class="situation-desc">13. Du schlägst deinem Partner vor, gemeinsam den Film anzuschauen:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(13, 'b', this)">
+                    <input type="radio" name="q13" value="a"> давай смотрели фильм.
+                </label>
+                <label class="option-label" onclick="checkRadio(13, 'b', this)">
+                    <input type="radio" name="q13" value="b"> давай посмотрим фильм.
+                </label>
+                <label class="option-label" onclick="checkRadio(13, 'b', this)">
+                    <input type="radio" name="q13" value="c"> пусть мы посмотрим фильм.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(13)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(13, 1)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task14">
+            <span class="situation-desc">14. Du sagst einer Gruppe von Leuten sehr umgangssprachlich: Los, gehen wir!</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(14, 'a', this)">
+                    <input type="radio" name="q14" value="a"> пошли!
+                </label>
+                <label class="option-label" onclick="checkRadio(14, 'a', this)">
+                    <input type="radio" name="q14" value="b"> идёте!
+                </label>
+                <label class="option-label" onclick="checkRadio(14, 'a', this)">
+                    <input type="radio" name="q14" value="c"> пошлите!
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(14)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(14, 0)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task15">
+            <span class="situation-desc">15. Du möchtest, dass dein Vater (Dritter) dir die Wahrheit sagt:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(15, 'b', this)">
+                    <input type="radio" name="q15" value="a"> пусть он говорит правду.
+                </label>
+                <label class="option-label" onclick="checkRadio(15, 'b', this)">
+                    <input type="radio" name="q15" value="b"> пусть он скажет правду.
+                </label>
+                <label class="option-label" onclick="checkRadio(15, 'b', this)">
+                    <input type="radio" name="q15" value="c"> давай он скажет правду.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(15)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(15, 1)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task16">
+            <span class="situation-desc">16. Du schlägst einer Gruppe von Freunden vor, jetzt mit dem Lesen zu beginnen:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(16, 'c', this)">
+                    <input type="radio" name="q16" value="a"> давайте прочитаем.
+                </label>
+                <label class="option-label" onclick="checkRadio(16, 'c', this)">
+                    <input type="radio" name="q16" value="b"> пойдёмте прочитаем.
+                </label>
+                <label class="option-label" onclick="checkRadio(16, 'c', this)">
+                    <input type="radio" name="q16" value="c"> давайте читать.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(16)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(16, 2)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task17">
+            <span class="situation-desc">17. Du forderst eine Gruppe Fremder höflich auf, mitzukommen (Bewegung):</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(17, 'b', this)">
+                    <input type="radio" name="q17" value="a"> пойдём!
+                </label>
+                <label class="option-label" onclick="checkRadio(17, 'b', this)">
+                    <input type="radio" name="q17" value="b"> пойдёмте.
+                </label>
+                <label class="option-label" onclick="checkRadio(17, 'b', this)">
+                    <input type="radio" name="q17" value="c"> идём.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(17)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(17, 1)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task18">
+            <span class="situation-desc">18. Du willst, dass die Kinder (Dritte) jetzt nicht laut schreien (Verbot):</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(18, 'a', this)">
+                    <input type="radio" name="q18" value="a"> пусть они не кричат.
+                </label>
+                <label class="option-label" onclick="checkRadio(18, 'a', this)">
+                    <input type="radio" name="q18" value="b"> пусть они не крикнут.
+                </label>
+                <label class="option-label" onclick="checkRadio(18, 'a', this)">
+                    <input type="radio" name="q18" value="c"> пускай они не закричат.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(18)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(18, 0)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task19">
+            <span class="situation-desc">19. Du schlägst vor, gemeinsam (du und ein Freund) ein Foto zu machen (Resultat):</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(19, 'b', this)">
+                    <input type="radio" name="q19" value="a"> давай фотографировать.
+                </label>
+                <label class="option-label" onclick="checkRadio(19, 'b', this)">
+                    <input type="radio" name="q19" value="b"> давай сфотографируемся.
+                </label>
+                <label class="option-label" onclick="checkRadio(19, 'b', this)">
+                    <input type="radio" name="q19" value="c"> пошли фотографироваться.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(19)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(19, 1)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+        <div class="task-card" id="task20">
+            <span class="situation-desc">20. Du willst mit deinem Freund sofort weglaufen/wegrennen:</span>
+            <div class="option-group">
+                <label class="option-label" onclick="checkRadio(20, 'a', this)">
+                    <input type="radio" name="q20" value="a"> побежали!
+                </label>
+                <label class="option-label" onclick="checkRadio(20, 'a', this)">
+                    <input type="radio" name="q20" value="b"> бежим!
+                </label>
+                <label class="option-label" onclick="checkRadio(20, 'a', this)">
+                    <input type="radio" name="q20" value="c"> пойдёмте бегать.
+                </label>
+            </div>
+            <div class="controls">
+                <button class="btn-reset" onclick="resetTask(20)">Zurücksetzen</button>
+                <button class="btn-solution" onclick="showSolution(20, 0)">Lösung anzeigen</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function checkRadio(taskId, correctLetter, element) {
+        const container = document.getElementById('task' + taskId);
+        const labels = container.querySelectorAll('.option-label');
+        const selectedValue = element.querySelector('input').value;
+
+        // Reset all labels in this task
+        labels.forEach(label => {
+            label.classList.remove('correct-opt', 'incorrect-opt');
+        });
+
+        // Add feedback
+        if (selectedValue === correctLetter) {
+            element.classList.add('correct-opt');
+        } else {
+            element.classList.add('incorrect-opt');
+            // Show which one was correct
+            labels.forEach(label => {
+                if(label.querySelector('input').value === correctLetter) {
+                    label.classList.add('correct-opt');
+                }
+            });
+        }
+    }
+
+    function resetTask(id) {
+        const container = document.getElementById('task' + id);
+        const labels = container.querySelectorAll('.option-label');
+        const radios = container.querySelectorAll('input');
+
+        labels.forEach(label => label.classList.remove('correct-opt', 'incorrect-opt'));
+        radios.forEach(radio => radio.checked = false);
+    }
+
+    function showSolution(taskId, correctIndex) {
+        const container = document.getElementById('task' + taskId);
+        const labels = container.querySelectorAll('.option-label');
+        const radios = container.querySelectorAll('input');
+
+        labels.forEach(label => label.classList.remove('correct-opt', 'incorrect-opt'));
+        labels[correctIndex].classList.add('correct-opt');
+        radios[correctIndex].checked = true;
+    }
+</script>
+
+</body>
+</html>
