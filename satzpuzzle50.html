@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Satz-Puzzle (Imperativ-Alternativen)</title>
+    <!-- Polyfill für Drag & Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-color: #dcdde1;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-style: normal !important; /* Keine Kursivschrift */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .intro-box {
+            background-color: #e8f4fd;
+            padding: 20px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .task-container {
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            background-color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .task-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .instruction-small {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .word-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px dashed #ccc;
+            min-height: 65px;
+            border-radius: 4px;
+            align-items: center;
+        }
+
+        .drop-zone {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #fff;
+            border: 2px solid var(--secondary-color);
+            min-height: 65px;
+            border-radius: 4px;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .word-card {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .word-card:active {
+            cursor: grabbing;
+        }
+
+        /* Feedback-Styles */
+        .drop-zone.correct-bg {
+            border-color: var(--success-color);
+            background-color: #eafaf1;
+        }
+
+        .drop-zone.incorrect-bg {
+            border-color: var(--error-color);
+            background-color: #fdedec;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #fff;
+            transition: opacity 0.3s;
+        }
+
+        .btn-reset { background-color: #95a5a6; }
+        .btn-solution { background-color: #7f8c8d; }
+        button:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .btn-group { flex-direction: column; }
+            .drop-zone, .word-pool { padding: 10px; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik</h1>
+    <h2>Satz-Puzzle: Imperativ-Alternativen</h2>
+
+    <div class="intro-box">
+        <p>Bringe die Wörter in die richtige Reihenfolge, um Aufforderungen oder gemeinsame Pläne auszudrücken. <br>
+        <strong>Hinweis:</strong> Die Drop-Zone färbt sich automatisch <strong>grün</strong>, sobald der Satz korrekt vervollständigt wurde.</p>
+    </div>
+
+    <div id="exercise-list">
+        <!-- Aufgaben 1-20 -->
+    </div>
+</div>
+
+<script>
+    const tasks = [
+        { id: 1, words: ["пусть", "он", "не", "опаздывает"], solutions: ["пусть он не опаздывает"], hint: "Er soll nicht zu spät kommen." },
+        { id: 2, words: ["давай", "пойдём", "в", "кино"], solutions: ["давай пойдём в кино"], hint: "Lass uns ins Kino gehen." },
+        { id: 3, solutions: ["пускай она купит хлеб"], words: ["пускай", "она", "купит", "хлеб"], hint: "Lass sie Brot kaufen." },
+        { id: 4, solutions: ["пусть они не шумят"], words: ["пусть", "они", "не", "шумят"], hint: "Sie sollen keinen Lärm machen." },
+        { id: 5, solutions: ["давайте завтракать в кафе"], words: ["давайте", "завтракать", "в", "кафе"], hint: "Lassen Sie uns im Café frühstücken." },
+        { id: 6, solutions: ["давай не будем спорить"], words: ["давай", "не", "будем", "спорить"], hint: "Lass uns nicht streiten." },
+        { id: 7, solutions: ["пусть он позвонит мне"], words: ["пусть", "он", "позвонит", "мне"], hint: "Er soll mich anrufen." },
+        { id: 8, solutions: ["пойдёмте обедать в ресторан"], words: ["пойдёмте", "обедать", "в", "ресторан"], hint: "Gehen wir im Restaurant essen (höflich)." },
+        { id: 9, solutions: ["пошли скорее домой"], words: ["пошли", "скорее", "домой"], hint: "Gehen wir schnell nach Hause!" },
+        { id: 10, solutions: ["давай сегодня посмотрим фильм", "давай посмотрим фильм сегодня"], words: ["давай", "сегодня", "посмотрим", "фильm"], hint: "Lass uns heute einen Film ansehen." },
+        { id: 11, solutions: ["пусть дети играют здесь"], words: ["пусть", "дети", "играют", "здесь"], hint: "Lass die Kinder hier spielen." },
+        { id: 12, solutions: ["поехали на дачу субботу", "поехали в субботу на дачу"], words: ["поехали", "в", "субботу", "на", "дачу"], hint: "Fahren wir am Samstag zur Datscha." },
+        { id: 13, solutions: ["давайте не терять время"], words: ["давайте", "не", "терять", "время"], hint: "Lassen Sie uns keine Zeit verlieren." },
+        { id: 14, solutions: ["пусть она не плачет"], words: ["пусть", "она", "не", "плачет"], hint: "Sie soll nicht weinen." },
+        { id: 15, solutions: ["давай попьём вкусный чай"], words: ["давай", "попьём", "вкусный", "чай"], hint: "Lass uns leckeren Tee trinken." },
+        { id: 16, solutions: ["пойдём погуляем в парке"], words: ["пойдём", "погуляем", "в", "парке"], hint: "Gehen wir im Park spazieren." },
+        { id: 17, solutions: ["пускай он сделает это сам"], words: ["пускай", "он", "сделает", "это", "сам"], hint: "Er soll das selbst machen." },
+        { id: 18, solutions: ["давайте делать это вместе"], words: ["давайте", "делать", "это", "вместе"], hint: "Lassen Sie uns das zusammen tun." },
+        { id: 19, solutions: ["пусть они не курят здесь"], words: ["пусть", "они", "не", "курят", "здесь"], hint: "Sie sollen hier nicht rauchen." },
+        { id: 20, solutions: ["побежали скорее на автобус"], words: ["побежали", "скорее", "на", "автобус"], hint: "Laufen wir schnell zum Bus!" }
+    ];
+
+    const exerciseList = document.getElementById('exercise-list');
+
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    function createTask(task) {
+        const container = document.createElement('div');
+        container.className = 'task-container';
+        container.id = `task-${task.id}`;
+
+        const header = document.createElement('div');
+        header.className = 'task-header';
+        header.innerText = `Aufgabe ${task.id}: „${task.hint}“`;
+        container.appendChild(header);
+
+        const pool = document.createElement('div');
+        pool.className = 'word-pool';
+        pool.id = `pool-${task.id}`;
+        pool.addEventListener('dragover', dragOver);
+        pool.addEventListener('drop', (e) => dropWord(e, task.id));
+
+        shuffle([...task.words]).forEach((word, index) => {
+            const wordEl = document.createElement('div');
+            wordEl.className = 'word-card';
+            wordEl.draggable = true;
+            wordEl.innerText = word;
+            wordEl.id = `word-${task.id}-${index}`;
+            wordEl.addEventListener('dragstart', dragStart);
+            pool.appendChild(wordEl);
+        });
+        container.appendChild(pool);
+
+        const dropZone = document.createElement('div');
+        dropZone.className = 'drop-zone';
+        dropZone.id = `drop-${task.id}`;
+        dropZone.addEventListener('dragover', dragOver);
+        dropZone.addEventListener('drop', (e) => dropWord(e, task.id));
+        container.appendChild(dropZone);
+
+        const btnGroup = document.createElement('div');
+        btnGroup.className = 'btn-group';
+
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'btn-reset';
+        resetBtn.innerText = 'Zurücksetzen';
+        resetBtn.onclick = () => resetTask(task.id);
+        btnGroup.appendChild(resetBtn);
+
+        const solutionBtn = document.createElement('button');
+        solutionBtn.className = 'btn-solution';
+        solutionBtn.innerText = 'Lösung anzeigen';
+        solutionBtn.onclick = () => showSolution(task.id);
+        btnGroup.appendChild(solutionBtn);
+
+        container.appendChild(btnGroup);
+        exerciseList.appendChild(container);
+    }
+
+    function dragStart(e) {
+        e.dataTransfer.setData('text/plain', e.target.id);
+    }
+
+    function dragOver(e) {
+        e.preventDefault();
+    }
+
+    function dropWord(e, taskId) {
+        e.preventDefault();
+        const wordId = e.dataTransfer.getData('text');
+        const wordEl = document.getElementById(wordId);
+        
+        // Sicherstellen, dass das Wort zur richtigen Aufgabe gehört
+        if (!wordId.startsWith(`word-${taskId}`)) return;
+
+        const dropZone = document.getElementById(`drop-${taskId}`);
+        const pool = document.getElementById(`pool-${taskId}`);
+
+        // Wo wurde das Wort fallen gelassen?
+        const targetZone = e.target.closest('.drop-zone') || e.target.closest('.word-pool');
+        if (targetZone) {
+            targetZone.appendChild(wordEl);
+        }
+
+        instantCheck(taskId);
+    }
+
+    function instantCheck(taskId) {
+        const task = tasks.find(t => t.id === taskId);
+        const dropZone = document.getElementById(`drop-${taskId}`);
+        const userWords = Array.from(dropZone.children).map(el => el.innerText.trim());
+        const userSentence = userWords.join(' ');
+
+        // Reset Styles
+        dropZone.classList.remove('correct-bg', 'incorrect-bg');
+
+        if (userWords.length === 0) return;
+
+        // Wenn alle Wörter platziert wurden
+        if (userWords.length === task.words.length) {
+            if (task.solutions.includes(userSentence)) {
+                dropZone.classList.add('correct-bg');
+            } else {
+                dropZone.classList.add('incorrect-bg');
+            }
+        } else {
+            // Teilprüfung: Passt der Anfang zu einer der Lösungen?
+            const isPartialMatch = task.solutions.some(sol => sol.startsWith(userSentence));
+            if (!isPartialMatch) {
+                dropZone.classList.add('incorrect-bg');
+            }
+        }
+    }
+
+    function resetTask(id) {
+        const task = tasks.find(t => t.id === id);
+        const pool = document.getElementById(`pool-${id}`);
+        const dropZone = document.getElementById(`drop-${id}`);
+        
+        Array.from(dropZone.children).forEach(word => pool.appendChild(word));
+        dropZone.classList.remove('correct-bg', 'incorrect-bg');
+    }
+
+    function showSolution(id) {
+        const task = tasks.find(t => t.id === id);
+        const dropZone = document.getElementById(`drop-${id}`);
+        const pool = document.getElementById(`pool-${id}`);
+        
+        // Wörter aus Dropzone zurück in den Pool, um Ordnung zu halten
+        Array.from(dropZone.children).forEach(word => pool.appendChild(word));
+        
+        const firstSolutionWords = task.solutions[0].split(' ');
+        
+        firstSolutionWords.forEach(wordText => {
+            const wordEl = Array.from(pool.children).find(el => el.innerText === wordText);
+            if (wordEl) dropZone.appendChild(wordEl);
+        });
+
+        dropZone.classList.remove('incorrect-bg');
+        dropZone.classList.add('correct-bg');
+    }
+
+    // Initialisierung
+    tasks.forEach(createTask);
+</script>
+
+</body>
+</html>
